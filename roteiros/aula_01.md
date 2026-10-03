@@ -24,14 +24,14 @@ Ao final desta aula, você será capaz de:
 
 Antes de qualquer configuração, veja o tipo de produto que você será capaz de gerar ao final da disciplina. Cada mapa abaixo resume **30 anos de dados** (1991–2020) para **todo o Paraná** e foi produzido com poucas dezenas de linhas de código, sem baixar nenhum arquivo para o computador.
 
-![Precipitação média anual](imagens/aula01_precipitacao.png)
-*Precipitação média anual (CHIRPS, 1991–2020).*
+![Precipitação média anual](imagens/aula01_precipitacao_2020_2020.png)
+*Precipitação média anual (CHIRPS, 2020).*
 
-![Temperatura média anual](imagens/aula01_temperatura.png)
-*Temperatura média anual do ar a 2 m (ERA5-Land, 1991–2020).*
+![Temperatura média anual](imagens/aula01_temperatura_2020_2020.png)
+*Temperatura média anual do ar a 2 m (ERA5-Land, 2020).*
 
-![Deficiência hídrica anual](imagens/aula01_deficit.png)
-*Deficiência hídrica climatológica anual (TerraClimate, 1991–2020).*
+![Deficiência hídrica anual](imagens/aula01_deficit_2020_2020.png)
+*Deficiência hídrica climatológica anual (TerraClimate, 2020).*
 
 **Pergunta para a turma:** olhando os três mapas, onde você plantaria milho segunda safra sem irrigação? E onde o risco seria maior? Guarde sua resposta: voltaremos a ela no último encontro.
 
