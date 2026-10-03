@@ -1,7 +1,7 @@
 # Aula 01 · Colab + Google Earth Engine: primeiros passos
 
-> **Disciplina:** Agrometeorologia com Google Earth Engine e Python
-> **Encontro:** 1 de 8
+> **Disciplina:** Relações Físicas do Ambiente Agrícola
+> **Encontro:** 1 de 9 · 05/10/2026
 > **Duração sugerida:** 100 min (ajuste conforme a turma)
 > **Trabalho para a semana:** ambiente configurado + definição da área de estudo
 
@@ -17,20 +17,6 @@ Ao final desta aula, você será capaz de:
 4. Distinguir objetos do servidor (`ee.*`) de objetos do Python local.
 5. Reconhecer as principais fontes de dados agrometeorológicos disponíveis no catálogo do GEE.
 6. Delimitar uma área de estudo a partir de um limite municipal.
-
----
-
-## Plano da aula
-
-| Bloco | Tempo | Conteúdo |
-|---|---|---|
-| 1 | 10 min | Motivação: onde vamos chegar |
-| 2 | 10 min | Como a disciplina funciona |
-| 3 | 15 min | O que é o Earth Engine |
-| 4 | 25 min | Mão na massa: acesso e autenticação |
-| 5 | 20 min | Primeiro script |
-| 6 | 10 min | Fontes de dados |
-| 7 | 10 min | Área de estudo e trabalho da semana |
 
 ---
 
@@ -53,19 +39,32 @@ Antes de qualquer configuração, veja o tipo de produto que você será capaz d
 
 ## 2. Como a disciplina funciona (10 min)
 
-A disciplina tem **8 encontros** e alterna dois tipos de aula:
+A disciplina tem **9 encontros** e alterna dois tipos de aula:
 
-- **Encontros de conteúdo:** exposição curta, seguida de trabalho em grupo.
-- **Encontros de apresentação:** os grupos apresentam o que produziram na semana anterior.
+- **Encontros expositivos:** exposição curta do conteúdo, seguida de trabalho em grupo.
+- **Encontros de apresentação/entrega:** os grupos apresentam o projeto desenvolvido nas semanas anteriores.
 
-Os projetos ao longo da disciplina abordam:
+| Enc. | Data | Tipo | Conteúdo |
+|---|---|---|---|
+| 1 | 05/10 | Expositiva | Colab + GEE: acesso, autenticação, primeiro script, fontes de dados |
+| 2 | 19/10 | — | Sem aula (SICITE) |
+| 3 | 26/10 | Expositiva | Radiação solar, temperatura e umidade do ar |
+| 4 | 09/11 | Apresentação | P1 |
+| 5 | 16/11 | Expositiva | Modelos de chuva, evapotranspiração e balanço hídrico |
+| 6 | 23/11 | Apresentação | P2 |
+| 7 | 30/11 | Expositiva | MZA-FAO: produtividade potencial e atingível |
+| 8 | 07/12 | Apresentação | P3 |
+| 9 | 14/12 | Expositiva | Encerramento |
 
-| Projeto | Tema |
-|---|---|
-| P1 | Radiação solar |
-| P2 | Temperatura e umidade relativa do ar |
-| P3 | Chuva e balanço hídrico |
-| P4 | Zoneamento agroclimático (MZA-FAO) |
+### Projetos e avaliação
+
+| Projeto | Tema | Peso |
+|---|---|---|
+| P1 | Elementos meteorológicos: radiação solar, temperatura e umidade do ar | 30% |
+| P2 | Chuva, evapotranspiração de referência e balanço hídrico | 30% |
+| P3 | Produtividade potencial e atingível (MZA-FAO), integrando P1 e P2 | 40% |
+
+Os projetos são **encadeados**: os resultados do P1 e do P2 alimentam o P3. Por isso, a área de estudo que o grupo definir agora será a mesma até o fim da disciplina. Escolha com cuidado.
 
 Os cálculos agronômicos serão feitos com a biblioteca [`agrometeorologiapy`](https://pypi.org/project/agrometeorologiapy/). O Earth Engine será a fonte e o processador dos dados; a interpretação agronômica é responsabilidade do grupo.
 
