@@ -99,7 +99,7 @@ print(x.getInfo())  # agora o servidor calcula e devolve: 5
 
 **Regra prática:** use `.getInfo()` apenas para trazer resultados pequenos (um número, uma lista curta). Nunca use em uma coleção inteira.
 
-### 3.3 Por que isso importa para a Agrometeorologia?
+### 3.3 Por que isso importa para a Agricultura?
 
 Antes do GEE, calcular a precipitação média de 30 anos para um estado exigia baixar gigabytes de arquivos, recortar, empilhar e processar localmente. Hoje, a mesma tarefa é uma linha de código e alguns segundos de processamento.
 
