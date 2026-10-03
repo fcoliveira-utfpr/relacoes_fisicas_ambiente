@@ -1,7 +1,7 @@
 # Aula 01 · Colab + Google Earth Engine: primeiros passos
 
 > **Disciplina:** Relações Físicas do Ambiente Agrícola
-> **Encontro:** 1 de 9 · 05/10/2026
+> **Encontro:** 1 de 9 ·
 > **Duração sugerida:** 100 min (ajuste conforme a turma)
 > **Trabalho para a semana:** ambiente configurado + definição da área de estudo
 
