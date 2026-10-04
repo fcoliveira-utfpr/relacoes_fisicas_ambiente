@@ -1,7 +1,7 @@
 # Aula 02 · Radiação solar, temperatura e umidade do ar
 
-> **Disciplina:** Agrometeorologia com Google Earth Engine e Python
-> **Encontro:** 3 de 9 · 26/10/2026
+> **Disciplina:** Relações Físicas do Ambiente Agrícola
+> **Encontro:** 3 de 9 ·
 > **Duração sugerida:** 100 min (ajuste conforme a turma)
 > **Trabalho:** Projeto 1, Elementos meteorológicos (apresentação e entrega em 09/11/2026, peso 30%)
 
@@ -11,12 +11,13 @@
 
 Ao final desta aula, você será capaz de:
 
-1. Explicar os fatores astronômicos e atmosféricos que controlam a radiação solar na superfície.
-2. Descrever os componentes do balanço de radiação: ondas curtas, ondas longas e saldo de radiação.
-3. Relacionar a amplitude térmica diária à nebulosidade e, portanto, à radiação solar global.
-4. Calcular as pressões de vapor a partir da temperatura e da umidade relativa.
-5. Compreender a cadeia **temperatura → Rs → Rn → ETo** que estrutura o Projeto 1.
-6. Acessar o conjunto BR-DWGD (Xavier et al.) no Earth Engine.
+1. Calcular a irradiância solar extraterrestre (Qo) e o fotoperíodo (N) para qualquer local e dia do ano.
+2. Relacionar a irradiância solar global (Qg) com Qo por meio da transmissividade atmosférica.
+3. Calcular o balanço de ondas curtas (BOC), o balanço de ondas longas (BOL) e o saldo de radiação (Rn).
+4. Relacionar a amplitude térmica diária à nebulosidade e, portanto, a Qg.
+5. Calcular as pressões de vapor a partir da temperatura e da umidade relativa.
+6. Compreender a cadeia **temperatura → Qg → Rn → ETo** que estrutura o Projeto 1.
+7. Acessar o conjunto BR-DWGD (Xavier et al.) no Earth Engine.
 
 ---
 
@@ -25,7 +26,7 @@ Ao final desta aula, você será capaz de:
 | Bloco | Tempo | Conteúdo |
 |---|---|---|
 | 1 | 10 min | Retomada: áreas de estudo dos grupos |
-| 2 | 25 min | Radiação solar e balanço de radiação |
+| 2 | 25 min | Qo, Qg e saldo de radiação |
 | 3 | 10 min | Temperatura do ar e amplitude térmica |
 | 4 | 10 min | Umidade do ar e pressões de vapor |
 | 5 | 10 min | A cadeia do Projeto 1 |
@@ -41,44 +42,63 @@ Cada grupo apresenta em **1 minuto** a área de estudo definida na semana anteri
 
 > ⚠️ **Atenção para o P1:** o local precisa ter uma **estação INMET a até cerca de 10 km**. Se a área escolhida não atender a esse critério, o grupo deve ajustar o ponto de análise dentro dela ainda hoje.
 
+Todos os cálculos desta aula usam a biblioteca `agrometeorologiapy`:
+
+```python
+!pip install -q agrometeorologiapy
+import agrometeorologiapy as amp
+```
+
 ---
 
-## 2. Radiação solar e balanço de radiação (25 min)
+## 2. Qo, Qg e saldo de radiação (25 min)
 
-### 2.1 De onde vem a energia
+### 2.1 Irradiância solar extraterrestre (Qo) e fotoperíodo (N)
 
-O Sol emite energia praticamente constante. No topo da atmosfera, uma superfície perpendicular aos raios solares recebe a **constante solar**:
+A energia solar que chega ao **topo da atmosfera**, sobre uma superfície horizontal, depende apenas da posição relativa entre o Sol e o local. O cálculo segue quatro passos.
 
-$$G_{sc} = 0{,}0820 \ \text{MJ m}^{-2}\,\text{min}^{-1} \approx 1367 \ \text{W m}^{-2}$$
+**Passo 1. Declinação solar (δ),** em graus, para o número do dia do ano (NDA):
 
-O que chega a uma superfície **horizontal** no topo da atmosfera, ao longo de um dia, depende apenas de três fatores astronômicos:
+$$\delta = 23{,}45 \,\text{sen}\left[\frac{360}{365}(NDA - 80)\right]$$
 
-- a **latitude** (φ);
-- a **declinação solar** (δ), que varia ao longo do ano;
-- a **distância Terra-Sol**, corrigida pelo fator d_r.
+**Passo 2. Ângulo horário do nascer do Sol (Hn) e fotoperíodo (N):**
 
-### 2.2 Radiação extraterrestre (Qo ou Ra) e fotoperíodo (N)
+$$H_n = \arccos(-\text{tg}\,\varphi \;\text{tg}\,\delta) \qquad N = \frac{2\,H_n}{15}$$
 
-$$d_r = 1 + 0{,}033 \cos\left(\frac{2\pi}{365} J\right) \qquad \delta = 0{,}409 \,\text{sen}\left(\frac{2\pi}{365} J - 1{,}39\right)$$
+**Passo 3. Correção da distância Terra-Sol:**
 
-$$\omega_s = \arccos(-\tan\varphi \,\tan\delta) \qquad N = \frac{24}{\pi}\,\omega_s$$
+$$\left(\frac{d}{D}\right)^2 = 1 + 0{,}033 \cos\left(\frac{360}{365}\,NDA\right)$$
 
-$$R_a = \frac{24 \cdot 60}{\pi}\, G_{sc}\, d_r \left[\omega_s \,\text{sen}\,\varphi \,\text{sen}\,\delta + \cos\varphi \,\cos\delta \,\text{sen}\,\omega_s\right]$$
+**Passo 4. Irradiância solar extraterrestre diária** (MJ m⁻² d⁻¹):
 
-em que J é o dia do ano, φ e δ estão em radianos e Ra em MJ m⁻² d⁻¹.
+$$Q_o = 37{,}6 \left(\frac{d}{D}\right)^2 \left[\frac{\pi}{180} H_n \,\text{sen}\,\varphi \,\text{sen}\,\delta + \cos\varphi \,\cos\delta \,\text{sen}\,H_n\right]$$
 
-![Ra ao longo do ano em diferentes latitudes](figuras/aula02_ra_latitudes.png)
-*Radiação extraterrestre diária em diferentes latitudes brasileiras.*
+em que φ é a latitude (negativa no hemisfério sul) e todos os ângulos estão em graus.
 
-> 💬 **Pergunta para a turma:** por que a amplitude anual de Ra é muito maior no Rio Grande do Sul do que em Roraima?
+```python
+lat = -24.86                                   # Santa Helena-PR
 
-### 2.3 Da atmosfera à superfície: Qg ou Rs
+NDA = amp.nda(15, 1)                           # 15 de janeiro
+dec = amp.declinacao_solar(NDA)                # δ (graus)
+Hn  = amp.angulo_horario_nascer(lat, dec)      # Hn (graus)
+N   = amp.fotoperiodo(Hn)                      # N (h)
+dD2 = amp.fator_correcao_distancia(NDA)        # (d/D)²
+Qo  = amp.irradiancia_extraterrestre(lat, dec, Hn, dD2)
 
-Ao atravessar a atmosfera, a radiação é **absorvida** (vapor d'água, ozônio, CO₂), **refletida** (nuvens) e **difundida** (gases e aerossóis). O que chega à superfície é a **radiação solar global** (Qg ou Rs).
+print(f'δ = {dec:.2f}°  Hn = {Hn:.2f}°  N = {N:.2f} h  Qo = {Qo:.2f} MJ m⁻² d⁻¹')
+# δ = -21.10°  Hn = 100.30°  N = 13.37 h  Qo = 42.59 MJ m⁻² d⁻¹
+```
 
-A razão entre as duas é a **transmissividade atmosférica**:
+![Qo ao longo do ano em diferentes latitudes](figuras/aula02_qo_latitudes.png)
+*Irradiância solar extraterrestre diária em diferentes latitudes brasileiras.*
 
-$$\tau = \frac{R_s}{R_a}$$
+> 💬 **Pergunta para a turma:** por que a amplitude anual de Qo é muito maior no Rio Grande do Sul do que em Roraima?
+
+### 2.2 Irradiância solar global (Qg)
+
+Ao atravessar a atmosfera, a radiação é **absorvida** (vapor d'água, ozônio, CO₂), **refletida** (nuvens) e **difundida** (gases e aerossóis). O que chega à superfície é a **irradiância solar global** (Qg). A razão entre as duas é a **transmissividade atmosférica**:
+
+$$\tau = \frac{Q_g}{Q_o}$$
 
 | Condição do céu | τ aproximado |
 |---|---|
@@ -86,49 +106,98 @@ $$\tau = \frac{R_s}{R_a}$$
 | Parcialmente nublado | 0,40 a 0,60 |
 | Encoberto | 0,15 a 0,30 |
 
-Em céu limpo, a FAO-56 estima a **radiação de céu claro** em função da altitude z (m):
+Em dias de céu claro, a FAO-56 estima a **irradiância de céu claro** (Qg,cs) em função da altitude z (m):
 
-$$R_{so} = (0{,}75 + 2 \times 10^{-5} z)\, R_a$$
+$$Q_{g,cs} = (0{,}75 + 2 \times 10^{-5}\, z)\, Q_o$$
 
 > 🔎 O valor **0,75** aparece em quase todos os modelos de Fernandes et al. (2018). Agora você sabe de onde ele vem.
 
-### 2.4 Balanço de radiação
+Quando Qg não é medida, ela pode ser estimada. Duas formas clássicas:
+
+**Angström-Prescott** (variante de Glover-McCulloch), a partir da razão de insolação n/N:
+
+$$Q_g = Q_o \left(0{,}29 \cos\varphi + 0{,}52\,\frac{n}{N}\right)$$
+
+**Hargreaves**, a partir apenas da amplitude térmica:
+
+$$Q_g = k\,(T_{max} - T_{min})^{0{,}5}\, Q_o \qquad k = 0{,}16 \ \text{(interior)} \ \text{ou} \ 0{,}19 \ \text{(litoral)}$$
+
+```python
+Qg_est = amp.Qg_hargreaves(Tmax=32.0, Tmin=21.0, Qo=Qo)
+print(f'Qg (Hargreaves) = {Qg_est:.2f} MJ m⁻² d⁻¹')
+# Qg (Hargreaves) = 22.60 MJ m⁻² d⁻¹
+```
+
+> 🔎 No P1, o modelo de Hargreaves de Fernandes et al. tem **dois parâmetros calibrados** (b e c), e não o k fixo da biblioteca. A função da biblioteca serve como ponto de partida e comparação.
+
+### 2.3 Balanço de radiação
 
 | Componente | Sigla | Significado |
 |---|---|---|
-| Saldo de ondas curtas | BOC ou Rns | Radiação solar absorvida pela superfície |
-| Saldo de ondas longas | BOL ou Rnl | Perda líquida de radiação térmica para a atmosfera |
+| Balanço de ondas curtas | BOC | Irradiância solar absorvida pela superfície |
+| Balanço de ondas longas | BOL | Saldo da radiação térmica (negativo: perda líquida) |
 | Saldo de radiação | Rn | Energia disponível para aquecer o ar, o solo e evaporar água |
 
-**Ondas curtas.** A superfície reflete parte da Rs, de acordo com seu albedo (α = 0,23 para a grama de referência):
+**Ondas curtas.** A superfície reflete parte de Qg, de acordo com seu coeficiente de reflexão (albedo) r:
 
-$$R_{ns} = (1 - \alpha)\, R_s$$
+$$BOC = Q_g\,(1 - r) \qquad r = 0{,}25 \ \text{(gramado)}$$
 
-**Ondas longas.** A superfície emite radiação térmica e recebe a contra-radiação da atmosfera. O saldo é quase sempre uma **perda**, maior com céu limpo e ar seco:
+**Ondas longas.** A superfície emite radiação térmica e recebe a contra-radiação da atmosfera. Pela equação de Stefan-Boltzmann corrigida pela FAO-56:
 
-$$R_{nl} = \sigma \left[\frac{T_{max,K}^4 + T_{min,K}^4}{2}\right]\left(0{,}34 - 0{,}14\sqrt{e_a}\right)\left(1{,}35\,\frac{R_s}{R_{so}} - 0{,}35\right)$$
+$$BOL = -\,\sigma \left[\frac{T_{max,K}^4 + T_{min,K}^4}{2}\right]\left(0{,}34 - 0{,}14\sqrt{e_a}\right)\left(1{,}35\,\frac{Q_g}{Q_{g,cs}} - 0{,}35\right)$$
 
-com σ = 4,903 × 10⁻⁹ MJ K⁻⁴ m⁻² d⁻¹.
+com σ = 4,903 × 10⁻⁹ MJ K⁻⁴ m⁻² d⁻¹ e temperaturas em kelvin.
 
 **Saldo de radiação:**
 
-$$R_n = R_{ns} - R_{nl}$$
+$$R_n = BOC + BOL$$
 
-Observe os três termos da equação de Rnl:
+Observe os três fatores da equação do BOL:
 
 - a **temperatura** controla quanto a superfície emite;
 - a **umidade** (ea) controla quanto a atmosfera devolve;
-- a **nebulosidade** (Rs/Rso) controla o "cobertor" de nuvens.
+- a **nebulosidade** (Qg/Qg,cs) controla o "cobertor" de nuvens.
+
+```python
+z = 258                                         # altitude (m)
+Tmax, Tmin, UR, Qg = 32.0, 21.0, 70, 24.0       # dia de verão
+
+es = (amp.es_tetens(Tmax) + amp.es_tetens(Tmin)) / 2
+ea = amp.ea_umidade(es, UR)
+Qg_cs = (0.75 + 2e-5 * z) * Qo
+
+BOC = amp.boc_saldo(Qg)
+BOL = amp.bol_saldo(Tmax, Tmin, ea, Qg, Qg_cs)
+Rn  = amp.saldo_radiacao(BOC, BOL)
+
+print(f'BOC = {BOC:.2f}  BOL = {BOL:.2f}  Rn = {Rn:.2f} MJ m⁻² d⁻¹')
+# BOC = 18.00  BOL = -3.05  Rn = 14.95 MJ m⁻² d⁻¹
+```
+
+Comparando um dia típico de verão e um de inverno em Santa Helena:
+
+| | 15/jan | 15/jul |
+|---|---|---|
+| Tmax / Tmin (°C) | 32 / 21 | 22 / 9 |
+| UR (%) | 70 | 72 |
+| N (h) | 13,37 | 10,61 |
+| Qo (MJ m⁻² d⁻¹) | 42,59 | 22,51 |
+| Qg (MJ m⁻² d⁻¹) | 24,0 | 12,0 |
+| Qg/Qo | 0,56 | 0,53 |
+| BOC | 18,00 | 9,00 |
+| BOL | −3,05 | −3,63 |
+| **Rn** | **14,95** | **5,37** |
+| Rn/Qg | 0,62 | 0,45 |
+
+> 💬 **Pergunta para a turma:** com transmissividade quase igual, por que o BOL é maior (em módulo) no inverno? E por que a razão Rn/Qg cai tanto?
 
 ![Climatologia mensal do balanço de radiação](figuras/aula02_climatologia_radiacao.png)
-*Exemplo de climatologia mensal de Ra, Rs, Rns, Rnl e Rn. Este é o formato do gráfico pedido na Etapa 2 do P1.*
+*Exemplo de climatologia mensal de Qo, Qg, BOC, BOL e Rn. Este é o formato do gráfico pedido na Etapa 2 do P1.*
 
-> 💬 **Pergunta para a turma:** em qual estação do ano Rnl é maior no Paraná? Por quê?
+### 2.4 Panorama no Paraná
 
-### 2.5 Panorama no Paraná
-
-![Radiação solar global média anual no Paraná](figuras/aula02_mapa_rs_parana.png)
-*Radiação solar global média diária no Paraná (BR-DWGD, 2001–2025).*
+![Irradiância solar global média no Paraná](figuras/aula02_mapa_qg_parana.png)
+*Irradiância solar global média diária no Paraná (BR-DWGD, 2001–2025).*
 
 ---
 
@@ -136,26 +205,24 @@ Observe os três termos da equação de Rnl:
 
 A temperatura do ar não é um elemento independente: ela é, em grande parte, **consequência do balanço de radiação**.
 
-- **Tmax** ocorre no início da tarde, após o pico de Rn, quando o saldo energético da superfície ainda é positivo.
+- **Tmax** ocorre no início da tarde, depois do pico de Rn, enquanto o saldo energético da superfície ainda é positivo.
 - **Tmin** ocorre próximo ao nascer do Sol, após uma noite inteira de perda por ondas longas.
+
+A temperatura média diária é estimada pela média dos extremos:
+
+$$T_{med} = \frac{T_{max} + T_{min}}{2}$$
 
 A **amplitude térmica** (ΔT = Tmax − Tmin) carrega informação sobre as nuvens:
 
 | Céu | Durante o dia | Durante a noite | ΔT |
 |---|---|---|---|
-| Limpo | Muita radiação solar → Tmax alta | Muita perda de ondas longas → Tmin baixa | **Grande** |
-| Nublado | Pouca radiação solar → Tmax moderada | Nuvens retêm calor → Tmin alta | **Pequena** |
+| Limpo | Muita irradiância solar, Tmax alta | Muita perda de ondas longas, Tmin baixa | **Grande** |
+| Nublado | Pouca irradiância solar, Tmax moderada | Nuvens retêm calor, Tmin alta | **Pequena** |
 
 ![Amplitude térmica × transmissividade](figuras/aula02_amplitude_transmissividade.png)
-*Relação entre amplitude térmica diária e transmissividade atmosférica (Rs/Ra).*
+*Relação entre amplitude térmica diária e transmissividade atmosférica (Qg/Qo).*
 
-Essa é a **ideia central** de todos os modelos de Fernandes et al. (2018): estimar Rs usando apenas temperatura, que é medida em praticamente qualquer estação, enquanto piranômetros são muito menos comuns.
-
-O modelo mais simples é o de Hargreaves:
-
-$$R_s = b \cdot R_a \cdot \Delta T^{0{,}5} + c$$
-
-Os demais (Bristow-Campbell, Campbell-Donatelli, Donatelli-Bellocchi e DCBB) refinam essa ideia com correções para temperatura mínima, sazonalidade e variações de ΔT ao longo da semana. As equações completas estão no roteiro do Projeto 1.
+Essa é a **ideia central** de todos os modelos de Fernandes et al. (2018): estimar Qg usando apenas temperatura, que é medida em praticamente qualquer estação, enquanto piranômetros são muito menos comuns. Os modelos de Bristow-Campbell, Campbell-Donatelli, Donatelli-Bellocchi e DCBB refinam a ideia de Hargreaves com correções para temperatura mínima, sazonalidade e variação de ΔT ao longo da semana. As equações completas estão no roteiro do Projeto 1.
 
 ![Boxplot da amplitude térmica mensal](figuras/aula02_boxplot_amplitude.png)
 *Distribuição mensal da amplitude térmica (equivalente à Fig. 2 de Fernandes et al.).*
@@ -164,21 +231,32 @@ Os demais (Bristow-Campbell, Campbell-Donatelli, Donatelli-Bellocchi e DCBB) ref
 
 ## 4. Umidade do ar e pressões de vapor (10 min)
 
-A quantidade **máxima** de vapor que o ar comporta depende só da temperatura. É a **pressão de saturação de vapor** (es), dada pela equação de Tetens:
+A quantidade **máxima** de vapor que o ar comporta depende só da temperatura. É a **pressão de saturação de vapor**, dada pela equação de Tetens (kPa):
 
-$$e^\circ(T) = 0{,}6108 \exp\left(\frac{17{,}27\,T}{T + 237{,}3}\right) \quad [\text{kPa}]$$
+$$e_s = 0{,}6108 \cdot 10^{\left(\frac{7{,}5\,T}{237{,}3 + T}\right)}$$
 
-Como e°(T) não é linear, a FAO-56 recomenda calcular a média das saturações nas temperaturas extremas, e não a saturação da temperatura média:
+Como a relação não é linear, em escala diária usa-se a média das saturações nas temperaturas extremas, e não a saturação da temperatura média:
 
-$$e_s = \frac{e^\circ(T_{max}) + e^\circ(T_{min})}{2}$$
+$$e_s = \frac{e_s(T_{max}) + e_s(T_{min})}{2}$$
 
-A **pressão real de vapor** (ea) é a quantidade de vapor efetivamente presente. Com a umidade relativa média:
+A **pressão parcial de vapor** (ea) é a quantidade de vapor efetivamente presente:
 
-$$e_a = \frac{UR_{med}}{100}\, e_s$$
+$$e_a = e_s \cdot \frac{UR}{100}$$
 
-O **déficit de pressão de vapor** (DPV = es − ea) mede o "poder de secagem" do ar e é um dos motores da evapotranspiração.
+O **déficit de saturação** (Δe = es − ea) mede o "poder evaporante" do ar e é um dos motores da evapotranspiração.
 
-> 🔎 **Onde a umidade entra no P1?** Em Rnl (via ea) e, depois, na ETo Penman-Monteith que serve de referência.
+```python
+es_max = amp.es_tetens(32.0)
+es_min = amp.es_tetens(21.0)
+es = (es_max + es_min) / 2
+ea = amp.ea_umidade(es, 70)
+de = amp.deficit_saturacao(es, ea)
+
+print(f'es = {es:.3f}  ea = {ea:.3f}  Δe = {de:.3f} kPa')
+# es = 3.621  ea = 2.534  Δe = 1.086 kPa
+```
+
+> 🔎 **Onde a umidade entra no P1?** No BOL (via ea) e, depois, na ETo Penman-Monteith que serve de referência.
 
 ---
 
@@ -189,7 +267,7 @@ O P1 reproduz dois artigos e depois os integra:
 ```
      Fernandes et al. (2018)              Fietz & Fisch (2009)
   ┌──────────────────────────┐     ┌──────────────────────────────┐
-  │ Tmax, Tmin  ──►  Rs      │ ──► │ Rs ──► Rn ──► ETo (Priestley- │
+  │ Tmax, Tmin  ──►  Qg      │ ──► │ Qg ──► Rn ──► ETo (Priestley- │
   │ (5 modelos empíricos)    │     │       (4 modelos)   Taylor)  │
   └──────────────────────────┘     └──────────────────────────────┘
 ```
@@ -202,9 +280,11 @@ A pergunta central do projeto é:
 
 Em condições sem advecção, a evapotranspiração é controlada essencialmente pela energia disponível:
 
-$$ET_0 = \alpha_{PT} \cdot W \cdot \frac{R_n}{\lambda} \qquad \alpha_{PT} = 1{,}26 \qquad \lambda = 2{,}45 \ \text{MJ kg}^{-1}$$
+$$ET_0 = \alpha_{PT} \cdot W \cdot \frac{R_n - G}{\lambda} \qquad W = \frac{\Delta}{\Delta + \gamma} \qquad \alpha_{PT} = 1{,}26 \qquad \lambda = 2{,}45 \ \text{MJ kg}^{-1}$$
 
-em que W é um fator de ponderação que depende da temperatura. Se Rn ≈ k·Rs, a equação vira **ET₀ = k · W · Rs**, que é a equação local que o grupo vai deduzir.
+em que Δ é o declive da curva de pressão de saturação e γ a constante psicrométrica. Na biblioteca, essa equação está em `amp.etp_priestley_taylor`. Fietz & Fisch usam aproximações lineares de W em função da temperatura, que o grupo deve comparar com o W exato.
+
+Se Rn ≈ k·Qg, a equação vira **ET₀ = k · W · Qg**, que é a equação local que o grupo vai deduzir.
 
 ---
 
@@ -248,8 +328,8 @@ for linha in dados[:4]:
 
 ### 6.3 Ressalvas que devem aparecer no relatório
 
-- A Rs do Xavier **não é medida**: é interpolada a partir de estações. Por isso a estação INMET próxima é obrigatória.
-- O BR-DWGD **não tem Rn medido**. O Rn de referência será calculado pela FAO-56, e isso é diferente do saldo-radiômetro usado por Fietz & Fisch.
+- A Qg do Xavier **não é medida**: é interpolada a partir de estações. Por isso a estação INMET próxima é obrigatória.
+- O BR-DWGD **não tem Rn medido**. O Rn de referência será calculado pela FAO-56, o que é diferente do saldo-radiômetro usado por Fietz & Fisch.
 
 ---
 
@@ -271,7 +351,7 @@ Sendo Oᵢ o valor observado, Pᵢ o estimado, Ō a média observada e n o núme
 - **r** (e R²) mede a **precisão**: os pontos acompanham uma reta?
 - **d** mede a **exatidão**: essa reta está perto da linha 1:1?
 - **RMSE** pune erros grandes; **MAE** trata todos os erros igualmente.
-- **EF** compara o modelo com a pior estimativa razoável: usar sempre a média.
+- **EF** compara o modelo com a estimativa mais simples possível: usar sempre a média.
 
 > 🔎 Um modelo pode ter r = 0,95 e ainda assim ser ruim, se estiver sistematicamente deslocado. É por isso que o índice **c** combina r e d.
 
@@ -292,10 +372,11 @@ Sendo Oᵢ o valor observado, Pᵢ o estimado, Ō a média observada e n o núme
 
 ### 8.2 Dicas práticas
 
-- **Calibração e validação:** anos ímpares para calibrar, anos pares para validar. Separe os dados uma única vez e reutilize.
+- **Calibração e validação:** anos ímpares para calibrar, anos pares para validar. Separem os dados uma única vez e reutilizem.
 - **Ajuste não linear:** `scipy.optimize.curve_fit`. O DB e o DCBB são sensíveis ao chute inicial: testem mais de um e registrem qual funcionou.
 - **ΔT de Fernandes:** usa a **Tmin do dia seguinte**. Cuidado com o último dia da série.
-- **agrometeorologiapy:** antes de escrever qualquer equação padrão (Ra, N, es, ea, Rso, Rns, Rnl, Rn, ETo), procurem a função na documentação da biblioteca.
+- **Albedo:** a biblioteca adota r = 0,25 (gramado); a FAO-56 usa 0,23 para a grama de referência. Definam qual usar e justifiquem.
+- **agrometeorologiapy:** antes de escrever qualquer equação padrão, procurem a função na biblioteca. As funções de radiação recebem o NDA como número inteiro; em um DataFrame com índice de datas, use `df.index.dayofyear`.
 
 ### 8.3 Entregáveis (09/11/2026)
 
