@@ -1,7 +1,7 @@
 # Aula 02 · Radiação solar, temperatura e umidade do ar
 
 > **Disciplina:** Relações Físicas do Ambiente Agrícola
-> **Encontro:** 3 de 9 ·
+> **Encontro:** 3 de 9 · 26/10/2026
 > **Duração sugerida:** 100 min (ajuste conforme a turma)
 > **Trabalho:** Projeto 1, Elementos meteorológicos (apresentação e entrega em 09/11/2026, peso 30%)
 
@@ -59,19 +59,19 @@ A energia solar que chega ao **topo da atmosfera**, sobre uma superfície horizo
 
 **Passo 1. Declinação solar (δ),** em graus, para o número do dia do ano (NDA):
 
-$$\delta = 23{,}45 \,\text{sen}\left[\frac{360}{365}(NDA - 80)\right]$$
+$$\delta = 23{,}45 \cdot \text{sen}\left[\frac{360}{365} \cdot (NDA - 80)\right]$$
 
 **Passo 2. Ângulo horário do nascer do Sol (Hn) e fotoperíodo (N):**
 
-$$H_n = \arccos(-\text{tg}\,\varphi \;\text{tg}\,\delta) \qquad N = \frac{2\,H_n}{15}$$
+$$H_n = \arccos\left[-\text{tg}(\varphi) \cdot \text{tg}(\delta)\right] \qquad N = \frac{2 \cdot H_n}{15}$$
 
 **Passo 3. Correção da distância Terra-Sol:**
 
-$$\left(\frac{d}{D}\right)^2 = 1 + 0{,}033 \cos\left(\frac{360}{365}\,NDA\right)$$
+$$\left(\frac{d}{D}\right)^2 = 1 + 0{,}033 \cdot \cos\left(\frac{360}{365} \cdot NDA\right)$$
 
 **Passo 4. Irradiância solar extraterrestre diária** (MJ m⁻² d⁻¹):
 
-$$Q_o = 37{,}6 \left(\frac{d}{D}\right)^2 \left[\frac{\pi}{180} H_n \,\text{sen}\,\varphi \,\text{sen}\,\delta + \cos\varphi \,\cos\delta \,\text{sen}\,H_n\right]$$
+$$Q_o = 37{,}6 \cdot \left(\frac{d}{D}\right)^2 \cdot \left[\frac{\pi}{180} \cdot H_n \cdot \text{sen}(\varphi) \cdot \text{sen}(\delta) + \cos(\varphi) \cdot \cos(\delta) \cdot \text{sen}(H_n)\right]$$
 
 em que φ é a latitude (negativa no hemisfério sul) e todos os ângulos estão em graus.
 
@@ -92,7 +92,7 @@ print(f'δ = {dec:.2f}°  Hn = {Hn:.2f}°  N = {N:.2f} h  Qo = {Qo:.2f} MJ m⁻�
 ![Qo ao longo do ano em diferentes latitudes](figuras/aula02_qo_latitudes.png)
 *Irradiância solar extraterrestre diária em diferentes latitudes brasileiras.*
 
-> 💬 **Pergunta para a turma:** por que a amplitude anual de Qo é muito maior no Rio Grande do Sul do que em Roraima?
+> 💬 **Pergunta 1:** por que a amplitude anual de Qo é muito maior no Rio Grande do Sul do que em Roraima?
 
 ### 2.2 Irradiância solar global (Qg)
 
@@ -108,7 +108,7 @@ $$\tau = \frac{Q_g}{Q_o}$$
 
 Em dias de céu claro, a FAO-56 estima a **irradiância de céu claro** (Qg,cs) em função da altitude z (m):
 
-$$Q_{g,cs} = (0{,}75 + 2 \times 10^{-5}\, z)\, Q_o$$
+$$Q_{g,cs} = \left(0{,}75 + 2 \cdot 10^{-5} \cdot z\right) \cdot Q_o$$
 
 > 🔎 O valor **0,75** aparece em quase todos os modelos de Fernandes et al. (2018). Agora você sabe de onde ele vem.
 
@@ -116,11 +116,11 @@ Quando Qg não é medida, ela pode ser estimada. Duas formas clássicas:
 
 **Angström-Prescott** (variante de Glover-McCulloch), a partir da razão de insolação n/N:
 
-$$Q_g = Q_o \left(0{,}29 \cos\varphi + 0{,}52\,\frac{n}{N}\right)$$
+$$Q_g = Q_o \cdot \left[0{,}29 \cdot \cos(\varphi) + 0{,}52 \cdot \frac{n}{N}\right]$$
 
 **Hargreaves**, a partir apenas da amplitude térmica:
 
-$$Q_g = k\,(T_{max} - T_{min})^{0{,}5}\, Q_o \qquad k = 0{,}16 \ \text{(interior)} \ \text{ou} \ 0{,}19 \ \text{(litoral)}$$
+$$Q_g = k \cdot (T_{max} - T_{min})^{0{,}5} \cdot Q_o \qquad k = 0{,}16 \ \text{(interior)} \ \text{ou} \ 0{,}19 \ \text{(litoral)}$$
 
 ```python
 Qg_est = amp.Qg_hargreaves(Tmax=32.0, Tmin=21.0, Qo=Qo)
@@ -140,11 +140,11 @@ print(f'Qg (Hargreaves) = {Qg_est:.2f} MJ m⁻² d⁻¹')
 
 **Ondas curtas.** A superfície reflete parte de Qg, de acordo com seu coeficiente de reflexão (albedo) r:
 
-$$BOC = Q_g\,(1 - r) \qquad r = 0{,}25 \ \text{(gramado)}$$
+$$BOC = Q_g \cdot (1 - r) \qquad r = 0{,}25 \ \text{(gramado)}$$
 
 **Ondas longas.** A superfície emite radiação térmica e recebe a contra-radiação da atmosfera. Pela equação de Stefan-Boltzmann corrigida pela FAO-56:
 
-$$BOL = -\,\sigma \left[\frac{T_{max,K}^4 + T_{min,K}^4}{2}\right]\left(0{,}34 - 0{,}14\sqrt{e_a}\right)\left(1{,}35\,\frac{Q_g}{Q_{g,cs}} - 0{,}35\right)$$
+$$BOL = -\sigma \cdot \left[\frac{T_{max,K}^4 + T_{min,K}^4}{2}\right] \cdot \left(0{,}34 - 0{,}14 \cdot \sqrt{e_a}\right) \cdot \left(1{,}35 \cdot \frac{Q_g}{Q_{g,cs}} - 0{,}35\right)$$
 
 com σ = 4,903 × 10⁻⁹ MJ K⁻⁴ m⁻² d⁻¹ e temperaturas em kelvin.
 
@@ -189,7 +189,9 @@ Comparando um dia típico de verão e um de inverno em Santa Helena:
 | **Rn** | **14,95** | **5,37** |
 | Rn/Qg | 0,62 | 0,45 |
 
-> 💬 **Pergunta para a turma:** com transmissividade quase igual, por que o BOL é maior (em módulo) no inverno? E por que a razão Rn/Qg cai tanto?
+> 💬 **Pergunta 2:** com transmissividade quase igual, por que o BOL é maior (em módulo) no inverno?
+>
+> 💬 **Pergunta 3:** por que a razão Rn/Qg cai tanto do verão para o inverno?
 
 ![Climatologia mensal do balanço de radiação](figuras/aula02_climatologia_radiacao.png)
 *Exemplo de climatologia mensal de Qo, Qg, BOC, BOL e Rn. Este é o formato do gráfico pedido na Etapa 2 do P1.*
@@ -227,13 +229,15 @@ Essa é a **ideia central** de todos os modelos de Fernandes et al. (2018): esti
 ![Boxplot da amplitude térmica mensal](figuras/aula02_boxplot_amplitude.png)
 *Distribuição mensal da amplitude térmica (equivalente à Fig. 2 de Fernandes et al.).*
 
+> 💬 **Pergunta 4:** em qual época do ano você espera a maior amplitude térmica no oeste do Paraná? Por quê?
+
 ---
 
 ## 4. Umidade do ar e pressões de vapor (10 min)
 
 A quantidade **máxima** de vapor que o ar comporta depende só da temperatura. É a **pressão de saturação de vapor**, dada pela equação de Tetens (kPa):
 
-$$e_s = 0{,}6108 \cdot 10^{\left(\frac{7{,}5\,T}{237{,}3 + T}\right)}$$
+$$e_s = 0{,}6108 \cdot 10^{\left(\frac{7{,}5 \cdot T}{237{,}3 + T}\right)}$$
 
 Como a relação não é linear, em escala diária usa-se a média das saturações nas temperaturas extremas, e não a saturação da temperatura média:
 
@@ -255,6 +259,8 @@ de = amp.deficit_saturacao(es, ea)
 print(f'es = {es:.3f}  ea = {ea:.3f}  Δe = {de:.3f} kPa')
 # es = 3.621  ea = 2.534  Δe = 1.086 kPa
 ```
+
+> 💬 **Pergunta 5:** por que calcular es pela temperatura média, em vez da média de es(Tmax) e es(Tmin), subestima o valor?
 
 > 🔎 **Onde a umidade entra no P1?** No BOL (via ea) e, depois, na ETo Penman-Monteith que serve de referência.
 
@@ -284,7 +290,7 @@ $$ET_0 = \alpha_{PT} \cdot W \cdot \frac{R_n - G}{\lambda} \qquad W = \frac{\Del
 
 em que Δ é o declive da curva de pressão de saturação e γ a constante psicrométrica. Na biblioteca, essa equação está em `amp.etp_priestley_taylor`. Fietz & Fisch usam aproximações lineares de W em função da temperatura, que o grupo deve comparar com o W exato.
 
-Se Rn ≈ k·Qg, a equação vira **ET₀ = k · W · Qg**, que é a equação local que o grupo vai deduzir.
+Se Rn ≈ k · Qg, a equação vira **ET₀ = k · W · Qg**, que é a equação local que o grupo vai deduzir.
 
 ---
 
@@ -339,9 +345,9 @@ Sendo Oᵢ o valor observado, Pᵢ o estimado, Ō a média observada e n o núme
 
 | Métrica | Equação | Ideal |
 |---|---|---|
-| RMSE | $\sqrt{\frac{1}{n}\sum (P_i - O_i)^2}$ | 0 |
+| RMSE | $\sqrt{\frac{1}{n} \cdot \sum (P_i - O_i)^2}$ | 0 |
 | RRMSE (%) | $100 \cdot \text{RMSE} / \bar{O}$ | 0 |
-| MAE | $\frac{1}{n}\sum \lvert P_i - O_i \rvert$ | 0 |
+| MAE | $\frac{1}{n} \cdot \sum \lvert P_i - O_i \rvert$ | 0 |
 | EF (Nash-Sutcliffe) | $1 - \frac{\sum (P_i - O_i)^2}{\sum (O_i - \bar{O})^2}$ | 1 |
 | d (Willmott) | $1 - \frac{\sum (P_i - O_i)^2}{\sum (\lvert P_i - \bar{O}\rvert + \lvert O_i - \bar{O}\rvert)^2}$ | 1 |
 | c (Camargo & Sentelhas) | $r \cdot d$ | 1 |
@@ -353,7 +359,7 @@ Sendo Oᵢ o valor observado, Pᵢ o estimado, Ō a média observada e n o núme
 - **RMSE** pune erros grandes; **MAE** trata todos os erros igualmente.
 - **EF** compara o modelo com a estimativa mais simples possível: usar sempre a média.
 
-> 🔎 Um modelo pode ter r = 0,95 e ainda assim ser ruim, se estiver sistematicamente deslocado. É por isso que o índice **c** combina r e d.
+> 💬 **Pergunta 6:** um modelo com r = 0,95 é necessariamente um bom modelo?
 
 > ⚠️ Pelo enunciado do P1, as métricas devem ser implementadas pelo grupo como **funções próprias**.
 
@@ -391,6 +397,34 @@ Sendo Oᵢ o valor observado, Pᵢ o estimado, Ō a média observada e n o núme
 - [ ] Sabemos se há fator de escala nas variáveis
 - [ ] Dividimos as etapas entre os integrantes
 - [ ] Instalamos a `agrometeorologiapy` no Colab
+
+---
+
+## 9. Respostas das perguntas da aula
+
+**Pergunta 1. Por que a amplitude anual de Qo é muito maior no Rio Grande do Sul do que em Roraima?**
+
+Perto do Equador, o fotoperíodo fica próximo de 12 h o ano inteiro e o Sol do meio-dia passa sempre perto do zênite, porque a declinação solar oscila apenas ±23,45° em torno da latitude local. Com o aumento da latitude, a variação da declinação passa a alterar muito mais a altura do Sol e a duração do dia: no Rio Grande do Sul, o fotoperíodo varia de cerca de 10 h no inverno a 14 h no verão, e o Sol de inverno fica bem mais baixo no horizonte. Os dois efeitos atuam na mesma direção, ampliando a diferença entre verão e inverno.
+
+**Pergunta 2. Com transmissividade quase igual, por que o BOL é maior (em módulo) no inverno?**
+
+A temperatura mais baixa reduz a emissão da superfície (o termo de Stefan-Boltzmann cai de 39,6 para 34,1 MJ m⁻² d⁻¹), mas o ar de inverno é muito mais seco: ea cai de 2,53 para 1,37 kPa. Com menos vapor d'água, a atmosfera devolve menos radiação de onda longa, e o fator de umidade (0,34 − 0,14 · √ea) aumenta de 0,117 para 0,176, ou seja, cerca de 50%. Esse efeito supera a redução da emissão, e a perda líquida aumenta.
+
+**Pergunta 3. Por que a razão Rn/Qg cai tanto do verão para o inverno?**
+
+O BOC é sempre uma fração fixa de Qg (75%), então cai pela metade junto com ela. O BOL, porém, praticamente não diminui; no exemplo, até aumenta. Como Rn = BOC + BOL, uma perda de onda longa quase constante pesa muito mais quando Qg é pequena: no verão, o BOL consome 17% do BOC; no inverno, 40%. Por isso a hipótese de Rn proporcional a Qg (modelo 3 de Fietz & Fisch) precisa ser testada mês a mês no P1.
+
+**Pergunta 4. Em qual época do ano você espera a maior amplitude térmica no oeste do Paraná? Por quê?**
+
+No inverno, especialmente entre julho e agosto. É o período mais seco e com mais dias de céu limpo: durante o dia a irradiância solar aquece a superfície e, à noite, o ar seco e sem nuvens favorece uma grande perda de onda longa, derrubando a Tmin. No verão, a nebulosidade e a umidade elevadas limitam tanto o aquecimento diurno quanto o resfriamento noturno.
+
+**Pergunta 5. Por que calcular es pela temperatura média subestima o valor?**
+
+Porque a curva de Tetens é convexa: es cresce cada vez mais rápido com a temperatura. O aumento de es entre Tmed e Tmax é maior que a redução entre Tmed e Tmin, então a média de es(Tmax) e es(Tmin) é sempre maior que es(Tmed). No exemplo, es(26,5 °C) = 3,46 kPa, enquanto a média dos extremos dá 3,62 kPa. A diferença cresce com a amplitude térmica.
+
+**Pergunta 6. Um modelo com r = 0,95 é necessariamente um bom modelo?**
+
+Não. O r mede apenas se os pontos se alinham em uma reta, não se essa reta coincide com a linha 1:1. Um modelo que superestima sempre 30% teria r alto e, ainda assim, erros grandes. Por isso se usa o índice d, que mede a exatidão, e o índice c = r · d, que combina as duas propriedades.
 
 ---
 
