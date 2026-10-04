@@ -1,7 +1,7 @@
 # Aula 02 · Radiação solar, temperatura e umidade do ar
 
 > **Disciplina:** Relações Físicas do Ambiente Agrícola
-> **Encontro:** 3 de 9 · 26/10/2026
+> **Encontro:** 3 de 9 · 
 > **Duração sugerida:** 100 min (ajuste conforme a turma)
 > **Trabalho:** Projeto 1, Elementos meteorológicos (apresentação e entrega em 09/11/2026, peso 30%)
 
@@ -89,7 +89,7 @@ print(f'δ = {dec:.2f}°  Hn = {Hn:.2f}°  N = {N:.2f} h  Qo = {Qo:.2f} MJ m⁻�
 # δ = -21.10°  Hn = 100.30°  N = 13.37 h  Qo = 42.59 MJ m⁻² d⁻¹
 ```
 
-![Qo ao longo do ano em diferentes latitudes](figuras/aula02_qo_latitudes.png)
+![Qo ao longo do ano em diferentes latitudes](imagens/aula02_qo_latitudes.png)
 *Irradiância solar extraterrestre diária em diferentes latitudes brasileiras.*
 
 > 💬 **Pergunta 1:** por que a amplitude anual de Qo é muito maior no Rio Grande do Sul do que em Roraima?
@@ -193,12 +193,12 @@ Comparando um dia típico de verão e um de inverno em Santa Helena:
 >
 > 💬 **Pergunta 3:** por que a razão Rn/Qg cai tanto do verão para o inverno?
 
-![Climatologia mensal do balanço de radiação](figuras/aula02_climatologia_radiacao.png)
+![Climatologia mensal do balanço de radiação](imagens/aula02_climatologia_radiacao.png)
 *Exemplo de climatologia mensal de Qo, Qg, BOC, BOL e Rn. Este é o formato do gráfico pedido na Etapa 2 do P1.*
 
 ### 2.4 Panorama no Paraná
 
-![Irradiância solar global média no Paraná](figuras/aula02_mapa_qg_parana.png)
+![Irradiância solar global média no Paraná](imagens/aula02_mapa_qg_parana.png)
 *Irradiância solar global média diária no Paraná (BR-DWGD, 2001–2025).*
 
 ---
@@ -221,12 +221,12 @@ A **amplitude térmica** (ΔT = Tmax − Tmin) carrega informação sobre as nuv
 | Limpo | Muita irradiância solar, Tmax alta | Muita perda de ondas longas, Tmin baixa | **Grande** |
 | Nublado | Pouca irradiância solar, Tmax moderada | Nuvens retêm calor, Tmin alta | **Pequena** |
 
-![Amplitude térmica × transmissividade](figuras/aula02_amplitude_transmissividade.png)
+![Amplitude térmica × transmissividade](imagens/aula02_amplitude_transmissividade.png)
 *Relação entre amplitude térmica diária e transmissividade atmosférica (Qg/Qo).*
 
 Essa é a **ideia central** de todos os modelos de Fernandes et al. (2018): estimar Qg usando apenas temperatura, que é medida em praticamente qualquer estação, enquanto piranômetros são muito menos comuns. Os modelos de Bristow-Campbell, Campbell-Donatelli, Donatelli-Bellocchi e DCBB refinam a ideia de Hargreaves com correções para temperatura mínima, sazonalidade e variação de ΔT ao longo da semana. As equações completas estão no roteiro do Projeto 1.
 
-![Boxplot da amplitude térmica mensal](figuras/aula02_boxplot_amplitude.png)
+![Boxplot da amplitude térmica mensal](imagens/aula02_boxplot_amplitude.png)
 *Distribuição mensal da amplitude térmica (equivalente à Fig. 2 de Fernandes et al.).*
 
 > 💬 **Pergunta 4:** em qual época do ano você espera a maior amplitude térmica no oeste do Paraná? Por quê?
