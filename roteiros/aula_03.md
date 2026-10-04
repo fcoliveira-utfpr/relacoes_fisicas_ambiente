@@ -1,7 +1,7 @@
 # Aula 03 · Modelo da Zona Agroecológica da FAO (MZA-FAO)
 
 > **Disciplina:** Relações Físicas do Ambiente Agrícola
-> **Encontro:** 7 de 9 · 30/11/2026
+> **Encontro:** 7 de 9 · 
 > **Duração sugerida:** 100 min (ajuste conforme a turma)
 > **Trabalho:** Projeto 3, Produtividade potencial, atingível e janelas de semeadura (apresentação e entrega em 07/12/2026, peso 40%)
 
